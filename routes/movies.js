@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const URL_REGEX = require('../utils/config');
 
 const {
   deleteMovie, getMovies, createMovie,
@@ -13,12 +14,11 @@ router.post('/', celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().pattern(/https?:\/\/(www\.)?[-a-z0-9-._~:/?#@!$&'()*+,;=_]#?/),
-    trailerLink: Joi.string().required().pattern(/https?:\/\/(www\.)?[-a-z0-9-._~:/?#@!$&'()*+,;=_]#?/),
+    image: Joi.string().required().regex(RegExp(URL_REGEX)),
+    trailerLink: Joi.string().required().regex(RegExp(URL_REGEX)),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
-    thumbnail: Joi.string().required().pattern(/https?:\/\/(www\.)?[-a-z0-9-._~:/?#@!$&'()*+,;=_]#?/),
-    movieId: Joi.number().required(),
+    thumbnail: Joi.string().required().regex(RegExp(URL_REGEX)),
   }),
 }), createMovie);
 router.delete('/:_id', celebrate({

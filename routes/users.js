@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const EMAIL_REGEX = require('../utils/config');
 const { celebrate, Joi } = require('celebrate');
 
 const {
@@ -9,7 +10,7 @@ router.get('/me', getCurrentUser);
 
 router.patch('/me', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().pattern(/^[a-z-Z0-9._%+-]+@[a-z-Z0-9-]+.+.[a-z]{2,4}$/i),
+    email: Joi.string().required().regex(RegExp(EMAIL_REGEX)),
     name: Joi.string().required().min(2).max(30),
   }),
 }), updateUser);

@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const userModel = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 
-// const { NODE_ENV, JWT_SECRET } = process.env;
+const { NODE_ENV, JWT_SECRET } = require('../utils/config');
 const OK = 200;
 
 const updateUser = (req, res, next) => {
@@ -43,9 +43,9 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   userModel.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'dev-secret');
-      // NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-      res.send({ token });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+            );
+    res.send({ token });
     })
     .catch(next);
 };

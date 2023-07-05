@@ -51,10 +51,6 @@ const movieSchema = mongoose.Schema({
     required: true,
     ref: 'user',
   },
-  movieId: {
-    type: Number,
-    required: true,
-  },
   nameRU: {
     type: String,
     required: true,
@@ -65,4 +61,4 @@ const movieSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('card', movieSchema);
+module.exports = mongoose.model('movie', movieSchema);

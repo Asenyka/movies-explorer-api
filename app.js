@@ -5,14 +5,22 @@ const { errors } = require('celebrate');
 const cors = require('cors');
 const helmet = require('helmet');
 const router = require('./routes');
+const rateLimit = require('express-rate-limit');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-error');
 const { DB_ADDRESS } = require('./utils/config');
 
+
 mongoose.connect(DB_ADDRESS);
 const app = express();
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100
+});
+app.use(limiter);
 app.use(cors());
 app.use(helmet());
+
 app.use(express.json());
 app.use(requestLogger);
 app.use('/', router);

@@ -20,6 +20,7 @@ const updateUser = (req, res, next) => {
 
 const getCurrentUser = (req, res, next) => {
   userModel.findById(req.user._id)
+  .orFail(()=>new NotFoundError("Пользователь не найден"))
     .then((user) => res.status(OK).send({ user }))
     .catch(next);
 };

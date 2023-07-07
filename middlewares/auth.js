@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const AuthorizationError = require('../errors/auth-error');
-const errMessageAuthRequired = require('../utils/constants');
+const {errMessageAuthRequired} = require('../utils/constants');
 
 const extractBearerToken = (header) => header.replace('Bearer ', '');
 const { NODE_ENV, JWT_SECRET } = require('../utils/config');

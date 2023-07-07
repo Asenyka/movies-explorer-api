@@ -2,8 +2,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
+const { errMessageUserNotFound } = require('../utils/constants');
 
 const { NODE_ENV, JWT_SECRET } = require('../utils/config');
+
 const OK = 200;
 
 const updateUser = (req, res, next) => {
@@ -11,7 +13,7 @@ const updateUser = (req, res, next) => {
   userModel.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
     .then((user) => {
       if (user === null) {
-        return next(new NotFoundError('Пользователь не найден'));
+        return next(new NotFoundError(errMessageUserNotFound));
       }
       return res.status(OK).send(user);
     })
@@ -20,7 +22,7 @@ const updateUser = (req, res, next) => {
 
 const getCurrentUser = (req, res, next) => {
   userModel.findById(req.user._id)
-  .orFail(()=>new NotFoundError("Пользователь не найден"))
+    .orFail(() => new NotFoundError(errMessageUserNotFound))
     .then((user) => res.status(OK).send({ user }))
     .catch(next);
 };
@@ -44,9 +46,8 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   userModel.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-            );
-    res.send({ token });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
+      res.send({ token });
     })
     .catch(next);
 };
